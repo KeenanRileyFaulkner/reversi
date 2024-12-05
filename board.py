@@ -41,11 +41,12 @@ class Board:
         self["e5"] = self.BLACK
 
     @classmethod
-    def from_board(self, board):
-        self.board = [[None] * 8 for _ in range(8)]
+    def from_board(cls, board):
+        new_board = cls()
         for x in range(8):
             for y in range(8):
-                self[x][y] = board[x][y]
+                new_board[x][y] = board[x][y]
+        return new_board
 
     def __str__(self):
         s = "  "
@@ -64,6 +65,9 @@ class Board:
                     s += self[x][y]
             s += "\n"
         return s
+
+    def __repr__(self):
+        return self.__str__()
 
     def __getitem__(self, key):
         if isinstance(key, Coordinate):
@@ -88,11 +92,11 @@ class Board:
         self[coordinate] = color
         self.__reversi(coordinate, color)
 
-    def get_winnner(self):
+    def get_winner(self):
         if not self.game_over():
             return None
 
-        count_white, count_black = self.__get_player_counts()
+        count_white, count_black = self.get_player_counts()
 
         if count_white > count_black:
             return self.WHITE
@@ -101,7 +105,7 @@ class Board:
         return None
 
     def game_over(self):
-        count_white, count_black = self.__get_player_counts()
+        count_white, count_black = self.get_player_counts()
         if count_white + count_black == 64:
             return True
 
@@ -115,7 +119,7 @@ class Board:
             for y in range(8):
                 if self.__is_valid_move(Coordinate(x, y), color):
                     valid_moves.add(Coordinate(x, y))
-        return valid_moves
+        return list(valid_moves)
 
     def __is_valid_move(self, i_coord, color):
         if self[i_coord] is not None or not self.__is_in_bounds(i_coord):
@@ -157,7 +161,7 @@ class Board:
     def __opponent(self, color):
         return self.WHITE if color == self.BLACK else self.BLACK
 
-    def __get_player_counts(self):
+    def get_player_counts(self):
         count_white = 0
         count_black = 0
         for x in range(8):

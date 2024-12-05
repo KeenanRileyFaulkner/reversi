@@ -60,7 +60,7 @@ class TestBoard(unittest.TestCase):
             for y in range(8):
                 self.board[x][y] = Board.WHITE
         self.assertTrue(self.board.game_over())
-        self.assertEqual(self.board.get_winnner(), Board.WHITE)
+        self.assertEqual(self.board.get_winner(), Board.WHITE)
 
     def test_reverses(self):
         move_set = [
